@@ -1,7 +1,6 @@
 package com.tuananh.simplebrowser.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -12,9 +11,10 @@ import com.tuananh.simplebrowser.model.NormalArticle
 import com.tuananh.simplebrowser.model.PodcastArticle
 
 class MyAdapter(
-    private val list: List<Article>,
     private val onItemClick: (Article) -> Unit
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val list = mutableListOf<Article>()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -58,6 +58,11 @@ class MyAdapter(
         return list.size
     }
 
+    fun updateData(items: List<Article>) {
+        this.list.clear()
+        this.list.addAll(items)
+        notifyDataSetChanged()
+    }
 
     inner class NormalViewHolder(
         private val binding: ItemNormalArticleBinding

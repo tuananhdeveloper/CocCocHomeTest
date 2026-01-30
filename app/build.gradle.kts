@@ -26,6 +26,7 @@ android {
 
         buildConfigField("String", "NEWS_API_KEY", localProperties["newsApiKey"] as String)
         buildConfigField("String", "PODCAST_INDEX_API_KEY", localProperties["podcastIndexApiKey"] as String)
+        buildConfigField("String", "API_SECRET", localProperties["apiSecret"] as String)
     }
 
     buildTypes {
@@ -59,4 +60,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.gson)
     implementation(libs.glide)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.activity.ktx)
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
 }
