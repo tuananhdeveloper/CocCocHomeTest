@@ -1,13 +1,11 @@
 package com.tuananh.simplebrowser
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.app.AlertDialog
+import android.content.Intent
 import androidx.activity.viewModels
 import com.tuananh.simplebrowser.adapter.MyAdapter
 import com.tuananh.simplebrowser.databinding.ActivityMainBinding
 import com.tuananh.simplebrowser.model.Article
-import android.app.AlertDialog
-import android.content.Intent
 
 class MainActivity : BaseActivity() {
     private val viewModel: MyViewModel by viewModels()
