@@ -37,24 +37,11 @@ class WebViewActivity: BaseActivity() {
             loadUrl(intent.getStringExtra(URL_KEY) ?: "")
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
-            addJavascriptInterface(WebInterface(), "AndroidAudio")
+            addJavascriptInterface(WebInterface(), WEB_INTERFACE_NAME)
             webViewClient = object: WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     this@WebViewActivity.hideProgressBar()
-                    evaluateJavascript(
-                        "var audios = document.getElementsByTagName('audio');\n" +
-                                "for (var i = 0; i < audios.length; i++) {\n" +
-                                "  audios[i].addEventListener('play', function(event) {\n" +
-                                "    var src = event.target.currentSrc;\n" +
-                                "    // Send to Android using the injected interface\n" +
-                                "    if (window.AndroidAudio && window.AndroidAudio.onAudioSource) {\n" +
-                                "      window.AndroidAudio.onAudioSource(src);\n" +
-                                "    }\n" +
-                                "    // Also log for debugging:\n" +
-                                "    console.log(\"Audio loaded:\", src);\n" +
-                                "  });\n" +
-                                "}"
-                        , null)
+                    evaluateJavascript(GET_SOURCE_SCRIPT, null)
                 }
 
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -85,7 +72,27 @@ class WebViewActivity: BaseActivity() {
     }
 
     private fun pauseWebAudio() {
-        val js = "" +
+        binding.myWebView.evaluateJavascript(PAUSE_WEB_AUDIO_SCRIPT, null)
+    }
+
+    companion object {
+        const val URL_KEY = "URL_KEY"
+        private const val AUDIO_FILE_NAME = "audio.mp3"
+        private const val WEB_INTERFACE_NAME = "AndroidAudio"
+        private const val GET_SOURCE_SCRIPT =
+                "var audios = document.getElementsByTagName('audio');\n" +
+                "for (var i = 0; i < audios.length; i++) {\n" +
+                "  audios[i].addEventListener('play', function(event) {\n" +
+                "    var src = event.target.currentSrc;\n" +
+                "    // Send to Android using the injected interface\n" +
+                "    if (window.AndroidAudio && window.AndroidAudio.onAudioSource) {\n" +
+                "      window.AndroidAudio.onAudioSource(src);\n" +
+                "    }\n" +
+                "    // Also log for debugging:\n" +
+                "    console.log(\"Audio loaded:\", src);\n" +
+                "  });\n" +
+                "}"
+        private const val PAUSE_WEB_AUDIO_SCRIPT =
                 "(function(){" +
                 "  document.querySelectorAll('audio').forEach(function(a) {" +
                 "    try { a.pause(); a.currentTime = 0; } catch(e) {}" +
@@ -94,12 +101,6 @@ class WebViewActivity: BaseActivity() {
                 "    try { v.pause(); v.currentTime = 0; } catch(e) {}" +
                 "  });" +
                 "})();"
-        binding.myWebView.evaluateJavascript(js, null)
-    }
-
-    companion object {
-        const val URL_KEY = "URL_KEY"
-        const val AUDIO_FILE_NAME = "audio.mp3"
     }
 
     inner class WebInterface {
