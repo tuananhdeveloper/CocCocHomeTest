@@ -7,4 +7,5 @@
     <string name="text_url_is_empty">Url is empty</string>
     <string name="text_error">Error</string>
     <string name="text_ok">OK</string>
+    <string name="text_no_internet_connection">No Internet connection</string>
 </resources>

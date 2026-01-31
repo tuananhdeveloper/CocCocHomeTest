@@ -34,7 +34,13 @@ class WebViewActivity: BaseActivity() {
 
     private fun initWebView() {
         with(binding.myWebView) {
-            loadUrl(intent.getStringExtra(URL_KEY) ?: "")
+            val url = intent.getStringExtra(URL_KEY)
+            if (!url.isNullOrEmpty()) {
+                loadUrl(url)
+            }
+            else {
+                showPopup(getString(R.string.text_url_is_empty))
+            }
             settings.javaScriptEnabled = true
             settings.domStorageEnabled = true
             addJavascriptInterface(WebInterface(), WEB_INTERFACE_NAME)

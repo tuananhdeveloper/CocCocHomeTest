@@ -1,5 +1,7 @@
 package com.tuananh.simplebrowser
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.FrameLayout
@@ -8,6 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 
 abstract class BaseActivity: AppCompatActivity() {
+    private val dialog by lazy {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.text_error))
+            .setPositiveButton(getString(R.string.text_ok)) { dialog, _ -> dialog.dismiss() }
+            .create()
+    }
+
     private val progressBar by lazy {
         ProgressBar(this).apply {
             isIndeterminate = true
@@ -34,5 +43,15 @@ abstract class BaseActivity: AppCompatActivity() {
 
     fun hideProgressBar() {
         progressBar.isVisible = false
+    }
+
+    fun showPopup(message: String, onDismiss: (() -> Unit)? = null) {
+        dialog.setMessage(message)
+        dialog.setOnDismissListener {
+            onDismiss?.invoke()
+        }
+        if (!dialog.isShowing) {
+            dialog.show()
+        }
     }
 }

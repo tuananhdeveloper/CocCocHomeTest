@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import com.tuananh.simplebrowser.adapter.MyAdapter
 import com.tuananh.simplebrowser.databinding.ActivityMainBinding
 import com.tuananh.simplebrowser.model.Article
+import com.tuananh.simplebrowser.retrofit.NetworkUtil
 
 class MainActivity : BaseActivity() {
     private val viewModel: MyViewModel by viewModels()
@@ -14,13 +15,6 @@ class MainActivity : BaseActivity() {
         MyAdapter {
             onItemClick(it)
         }
-    }
-
-    private val dialog by lazy {
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.text_error))
-            .setPositiveButton(getString(R.string.text_ok), null)
-            .create()
     }
 
     override fun initLayout() {
@@ -36,7 +30,14 @@ class MainActivity : BaseActivity() {
 
     private fun fetchData() {
         with(viewModel) {
-            fetchData()
+            if (NetworkUtil.isInternetAvailable(this@MainActivity)) {
+                fetchData()
+            }
+            else {
+                showPopup(getString(R.string.text_no_internet_connection)) {
+                    finish()
+                }
+            }
             articleData.observe(this@MainActivity) {
                 adapter.updateData(it)
             }
@@ -64,13 +65,6 @@ class MainActivity : BaseActivity() {
         }
         else {
             showPopup(getString(R.string.text_url_is_empty))
-        }
-    }
-
-    private fun showPopup(message: String) {
-        dialog.setMessage(message)
-        if (!dialog.isShowing) {
-            dialog.show()
         }
     }
 }
