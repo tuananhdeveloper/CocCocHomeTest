@@ -7,12 +7,16 @@ import java.security.MessageDigest
 object Network {
     private var retrofitA: Retrofit? = null
     private var retrofitB: Retrofit? = null
+    private const val NEWS_API_BASE_URL = "https://newsapi.org"
+    private const val PODCAST_INDEX_API_BASE_URL = "https://api.podcastindex.org"
+    private const val ALGORITHM = "SHA-1"
+    private const val PATTERN = "%02x"
     val userAgent = "MyApp/1.0 (Android; Mobile)"
 
     fun getRetrofitA(): Retrofit {
         if (retrofitA == null) {
             retrofitA = Retrofit.Builder()
-                .baseUrl("https://newsapi.org")
+                .baseUrl(NEWS_API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         }
@@ -22,7 +26,7 @@ object Network {
     fun getRetrofitB(): Retrofit {
         if (retrofitB == null) {
             retrofitB = Retrofit.Builder()
-                .baseUrl("https://api.podcastindex.org")
+                .baseUrl(PODCAST_INDEX_API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         }
@@ -30,14 +34,11 @@ object Network {
     }
 
     fun computePodcastIndexSignature(apiKey: String, apiSecret: String, epochSeconds: String): String {
-        // Step 1: Concatenate as described
         val base = apiKey + apiSecret + epochSeconds
 
-        // Step 2: SHA-1 hash
-        val sha1 = MessageDigest.getInstance("SHA-1")
+        val sha1 = MessageDigest.getInstance(ALGORITHM)
         val hashBytes = sha1.digest(base.toByteArray(Charsets.UTF_8))
 
-        // Step 3: Convert to lowercase hexadecimal string
-        return hashBytes.joinToString("") { "%02x".format(it) }
+        return hashBytes.joinToString("") { PATTERN.format(it) }
     }
 }
