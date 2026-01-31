@@ -75,13 +75,15 @@ class MyAdapter(
         }
 
         fun bind(normalArticle: NormalArticle) {
-            binding.tvTitle.text = normalArticle.title
-            binding.tvAuthor.text = normalArticle.author
-            binding.tvDescription.text = normalArticle.description
-            Glide.with(binding.ivArticle.context)
-                .load(normalArticle.imageUrl)
-                .centerCrop()
-                .into(binding.ivArticle)
+            with(binding) {
+                tvTitle.text = normalArticle.title
+                tvAuthor.text = normalArticle.author
+                tvDescription.text = normalArticle.description
+                Glide.with(ivArticle.context)
+                    .load(normalArticle.imageUrl)
+                    .centerCrop()
+                    .into(ivArticle)
+            }
         }
     }
 
@@ -96,12 +98,14 @@ class MyAdapter(
         }
 
         fun bind(podcastArticle: PodcastArticle) {
-            binding.tvTitle.text = podcastArticle.title
-            binding.tvDescription.text = podcastArticle.description
-            Glide.with(binding.ivArticle.context)
-                .load(podcastArticle.imageUrl)
-                .centerCrop()
-                .into(binding.ivArticle)
+            with(binding) {
+                tvTitle.text = podcastArticle.title
+                tvDescription.text = podcastArticle.description
+                Glide.with(ivArticle.context)
+                    .load(podcastArticle.imageUrl)
+                    .centerCrop()
+                    .into(ivArticle)
+            }
         }
     }
 }
