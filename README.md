@@ -10,8 +10,8 @@
 
 # Issues
 - Extracting audios file inside the articles:
-Getting audio source links from some articles was difficult. The audio links were not always inside <audio> tags in every articles,
-they could be inside <a> tags or <source> tags so I had to get articles from https://www.spreaker.com.
+Getting audio source links from some articles was difficult. The audio links were not always inside \<audio\> tags in every articles,
+they could be inside \<a\> tags or \<source\> tags so I had to get articles from https://www.spreaker.com.
 
 # APK
 https://drive.google.com/file/d/1XPecHfWlaZL0zzVFyfGuecONndN0Askg/view?usp=sharing
