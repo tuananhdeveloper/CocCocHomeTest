@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">SimpleBrowser</string>
+    <string name="text_more">More</string>
+    <string name="text_download">Download</string>
+    <string name="text_audio_download">Audio Download</string>
+    <string name="text_downloading_audio_file">Downloading audio file...</string>
+    <string name="text_url_is_empty">Url is empty</string>
 </resources>

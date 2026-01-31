@@ -9,7 +9,7 @@ import com.tuananh.simplebrowser.model.Article
 import android.app.AlertDialog
 import android.content.Intent
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private val viewModel: MyViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
     private val adapter by lazy {
@@ -25,8 +25,7 @@ class MainActivity : AppCompatActivity() {
             .create()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun initLayout() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initView()
@@ -46,15 +45,28 @@ class MainActivity : AppCompatActivity() {
             errorMessage.observe(this@MainActivity) {
                 showPopup(it)
             }
+            showingLoading.observe(this@MainActivity) {
+                if (it) {
+                    showProgressBar()
+                }
+                else {
+                    hideProgressBar()
+                }
+            }
         }
     }
 
     private fun onItemClick(article: Article) {
-        startActivity(
-            Intent(this, WebViewActivity::class.java).apply {
-                putExtra(WebViewActivity.URL_KEY, article.url)
-            }
-        )
+        if (!article.url.isEmpty()) {
+            startActivity(
+                Intent(this, WebViewActivity::class.java).apply {
+                    putExtra(WebViewActivity.URL_KEY, article.url)
+                }
+            )
+        }
+        else {
+            showPopup(getString(R.string.text_url_is_empty))
+        }
     }
 
     private fun showPopup(message: String) {

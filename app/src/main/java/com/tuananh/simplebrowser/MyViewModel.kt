@@ -16,16 +16,19 @@ class MyViewModel: ViewModel() {
     val articleData = _articleData
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage = _errorMessage
+    private val _showingLoading = MutableLiveData<Boolean>()
+    val showingLoading = _showingLoading
     private var newsAPIService: NewsAPIService = Network.getRetrofitA().create(NewsAPIService::class.java)
     private var podcastIndexAPIService: PodcastIndexAPIService = Network.getRetrofitB().create(PodcastIndexAPIService::class.java)
     private val xAuthDate = (System.currentTimeMillis() / 1000).toString()
 
     fun fetchData() {
+        _showingLoading.value = true
         viewModelScope.launch {
             val newsAPIResponse = newsAPIService.getArticles(
                 BuildConfig.NEWS_API_KEY,
-                "tech",
-                10
+                NEWS_QUERY,
+                NEWS_PAGE_SIZE
             )
             val podcastIndexAPIResponse = podcastIndexAPIService.getEpisodes(
                 Network.userAgent,
@@ -35,7 +38,8 @@ class MyViewModel: ViewModel() {
                     BuildConfig.PODCAST_INDEX_API_KEY,
                     BuildConfig.API_SECRET,
                     xAuthDate
-                )
+                ),
+                MAX_EPISODES
             )
             val normalArticles = mutableListOf<NormalArticle>()
             val podcastArticles = mutableListOf<PodcastArticle>()
@@ -61,6 +65,10 @@ class MyViewModel: ViewModel() {
             if (podcastIndexAPIResponse.isSuccessful) {
                 podcastIndexAPIResponse.body()?.let {
                     for (article in it.items) {
+                        if (article.link == null
+                            || !article.link!!.contains(SPREAKER_URL)) {
+                            continue
+                        }
                         val podcastArticle = PodcastArticle(
                             article.enclosureUrl ?: "",
                             article.title ?: "",
@@ -80,6 +88,14 @@ class MyViewModel: ViewModel() {
                 addAll(normalArticles)
                 addAll(podcastArticles)
             }
+            _showingLoading.value = false
         }
+    }
+
+    companion object {
+        private const val SPREAKER_URL = "https://www.spreaker.com/"
+        private const val MAX_EPISODES = 100
+        private const val NEWS_PAGE_SIZE = 10
+        private const val NEWS_QUERY = "tech"
     }
 }
