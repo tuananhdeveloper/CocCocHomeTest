@@ -5,4 +5,6 @@
     <string name="text_audio_download">Audio Download</string>
     <string name="text_downloading_audio_file">Downloading audio file...</string>
     <string name="text_url_is_empty">Url is empty</string>
+    <string name="text_error">Error</string>
+    <string name="text_ok">OK</string>
 </resources>

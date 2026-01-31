@@ -18,8 +18,8 @@ class MainActivity : BaseActivity() {
 
     private val dialog by lazy {
         AlertDialog.Builder(this)
-            .setTitle("Error")
-            .setPositiveButton("OK", null)
+            .setTitle(getString(R.string.text_error))
+            .setPositiveButton(getString(R.string.text_ok), null)
             .create()
     }
 
